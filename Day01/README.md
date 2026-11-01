@@ -1,0 +1,1 @@
+To make my website, it took a lot of trial and error, but eventually I asked chatGPT to prepare multiple files for me: 1 file with the index.md so I can write all the information I want included, 1 file to configure the website, 1 file to give it the syle that I want, and 1 file to organise the layout on the page.
