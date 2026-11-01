@@ -1,1 +1,1 @@
-
+To complete this assignment, I created a repository and cloned it to my computer. I came back on Github and edited the README.md file to put in my course description. Then I changed the name of this file to "Day02/README.md" so that it would create the Day02 folder and place it within that folder. Then, as instructed, I added a new file to this folder and entitled it "Day02/README.md", creating a new Day02 folder inside the previous one, and creating this README.md page to explain what I did.
