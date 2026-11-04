@@ -67,7 +67,15 @@ equation = input("dy/dx = ")
 slope_expression = parse_expression(equation)
 slope_function = sp.lambdify((x, y), slope_expression, modules="numpy")
 
-x_values = np.linspace(-5, 5, 20)
+x_min, x_max = -5, 5
+x_start = 0
+print("Assuming the initial x-value is x_0 = 0.")
+y_start_text = input("y(0) = (press Enter to plot only the slope field): ").strip()
+has_initial_value = bool(y_start_text)
+if has_initial_value:
+    y_start = float(y_start_text)
+
+x_values = np.linspace(x_min, x_max, 20)
 y_values = np.linspace(-5, 5, 20)
 x_grid, y_grid = np.meshgrid(x_values, y_values)
 
@@ -83,11 +91,54 @@ valid = np.isfinite(horizontal) & np.isfinite(vertical)
 horizontal = np.where(valid, horizontal, np.nan)
 vertical = np.where(valid, vertical, np.nan)
 
+def evaluate_slope(x_value, y_value):
+    slope = np.asarray(slope_function(x_value, y_value), dtype=float).item()
+    if not np.isfinite(slope):
+        raise ValueError("The slope became undefined while calculating the solution.")
+    return slope
+
+
+def integrate_solution(end_x):
+    direction = 1 if end_x > x_start else -1
+    step_size = 0.02
+    solution_x = [x_start]
+    solution_y = [y_start]
+
+    while direction * (end_x - solution_x[-1]) > 1e-12:
+        current_x = solution_x[-1]
+        current_y = solution_y[-1]
+        step = direction * min(step_size, abs(end_x - current_x))
+        k1 = evaluate_slope(current_x, current_y)
+        k2 = evaluate_slope(current_x + step / 2, current_y + step * k1 / 2)
+        k3 = evaluate_slope(current_x + step / 2, current_y + step * k2 / 2)
+        k4 = evaluate_slope(current_x + step, current_y + step * k3)
+        next_y = current_y + step * (k1 + 2 * k2 + 2 * k3 + k4) / 6
+        if not np.isfinite(next_y):
+            raise ValueError("The solution became undefined while being calculated.")
+        solution_x.append(current_x + step)
+        solution_y.append(next_y)
+
+    return solution_x, solution_y
+
+
+if has_initial_value:
+    left_x, left_y = integrate_solution(x_min)
+    right_x, right_y = integrate_solution(x_max)
+    solution_x = left_x[::-1][:-1] + right_x
+    solution_y = left_y[::-1][:-1] + right_y
+
 plt.quiver(x_grid, y_grid, horizontal, vertical, pivot="mid")
+if has_initial_value:
+    plt.plot(solution_x, solution_y, color="red", label="Solution curve")
+    plt.plot(x_start, y_start, "ro", label="Initial condition")
 plt.xlabel("x")
 plt.ylabel("y")
-plt.title(f"Slope field for dy/dx = {sp.sstr(slope_expression)}")
-plt.xlim(-5, 5)
+if has_initial_value:
+    plt.title(f"Slope field and solution for dy/dx = {sp.sstr(slope_expression)}")
+    plt.legend()
+else:
+    plt.title(f"Slope field for dy/dx = {sp.sstr(slope_expression)}")
+plt.xlim(x_min, x_max)
 plt.ylim(-5, 5)
 plt.grid(True)
 plt.show()
