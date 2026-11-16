@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Differential Equation Visualizer</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <header>
+
+            <p class="eyebrow">
+                A PYTHON PROJECT
+            </p>
+
+            <h1>
+                Differential Equation
+                <span>Visualizer</span>
+            </h1>
+
+            <p class="subtitle">
+                Explore the beauty of differential equations
+                through interactive slope fields.
+            </p>
+
+        </header>
+
+
+        <section class="form-card">
+
+            <h2>Explore an Equation</h2>
+
+            <p class="description">
+                Enter a differential equation below.
+                You can also provide an initial condition
+                to visualize its solution curve.
+            </p>
+
+
+            <form method="POST">
+
+                <label for="equation">
+                    Differential equation
+                </label>
+
+                <div class="input-group">
+
+                    <span class="math-label">
+                        dy/dx =
+                    </span>
+
+                    <input
+                        type="text"
+                        id="equation"
+                        name="equation"
+                        value="{{ equation }}"
+                        placeholder="x - y"
+                        maxlength="100"
+                        required
+                    >
+
+                </div>
+
+
+                <label for="initial_value">
+                    Initial condition (optional)
+                </label>
+
+                <div class="input-group">
+
+                    <span class="math-label">
+                        y(0) =
+                    </span>
+
+                    <input
+                        type="number"
+                        id="initial_value"
+                        name="initial_value"
+                        step="any"
+                        min="-5"
+                        max="5"
+                        value="{{ initial_value }}"
+                        placeholder="e.g. 2"
+                    >
+
+                </div>
+
+
+                <button type="submit">
+                    Generate Slope Field
+                </button>
+
+            </form>
+
+
+            <div class="examples">
+
+                <p>Try these examples:</p>
+
+                <div class="example-list">
+
+                    <span>x - y</span>
+
+                    <span>sin(x)</span>
+
+                    <span>x + y</span>
+
+                    <span>cos(x) - y</span>
+
+                    <span>x*y</span>
+
+                </div>
+
+                <p class="hint">
+                    Use ** for powers, for example x**2.
+                    Leave the initial condition empty
+                    to display only the slope field.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        {% if error %}
+
+        <div class="error-message">
+            {{ error }}
+        </div>
+
+        {% endif %}
+
+
+        {% if graph %}
+
+        <section class="result-card">
+
+            <h2>Your Slope Field</h2>
+
+            <p>
+                Here is the visualization of your
+                differential equation.
+            </p>
+
+            <img
+                src="data:image/png;base64,{{ graph }}"
+                alt="Slope field graph"
+                class="graph-image"
+            >
+
+        </section>
+
+        {% endif %}
+
+
+        <footer>
+
+            <p>
+                Created with Python, Flask, NumPy,
+                SymPy and Matplotlib.
+            </p>
+
+            <p>
+                Differential Equation Visualizer
+            </p>
+
+        </footer>
+
+    </div>
+
+</body>
+</html>
