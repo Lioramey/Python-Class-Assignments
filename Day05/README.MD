@@ -1,0 +1,1 @@
+I asked ChatGPT to explain what testing business logic meant in the context of my assignment. He said that it meant testing my slope_logic.py file because that's where the computations of my assignment actually are. 
